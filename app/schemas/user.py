@@ -13,12 +13,12 @@ class UserBase(BaseModel):
     degree: Optional[str]
     gender: Optional[str]
 
+
 class UserCreate(UserBase):
     pass
 
 class UserOut(UserBase):
     user_id: str
-    created_at: datetime
 
     class Config:
         orm_mode = True

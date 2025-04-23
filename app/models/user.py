@@ -21,7 +21,6 @@ class User(Base):
     acceptance_date = Column(DateTime, default=datetime.utcnow)
     acceptance_ip = Column(String(45))
     allow_anonimized_usage = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
 
     transcriptions = relationship("Transcription", back_populates="owner")
