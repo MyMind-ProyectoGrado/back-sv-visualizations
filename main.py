@@ -6,4 +6,4 @@ app = FastAPI()
 
 # Incluye las rutas
 app.include_router(transcription.router, tags=["Transcriptions"])
-app.include_router(user.router)  # Aquí debería ser "user.router" en lugar de "User.router"
+app.include_router(user.router, tags=["Users"])  
