@@ -5,3 +5,4 @@ uvicorn #si
 pydantic #si
 python-dotenv #si
 pydantic[email] #si
+PYJWT #si
