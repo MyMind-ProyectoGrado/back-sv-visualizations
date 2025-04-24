@@ -40,7 +40,7 @@ def read_transcriptions(db: Session = Depends(get_db)):
 
 
 # 🔹 Transcripciones del usuario autenticado en los últimos 7 días
-@router.get("/transcriptions/ultimos-7-dias", response_model=list[TranscriptionSummary2])
+@router.get("/transcriptions/user/ultimos-7-dias", response_model=list[TranscriptionSummary2])
 async def get_last_7_days_transcriptions(
     user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -63,7 +63,7 @@ async def get_last_7_days_transcriptions(
     # Convertir los resultados a la estructura resumida
     return [
         TranscriptionSummary2(
-            transcription_id=r.id,
+            transcription_id=r.transcription_id,
             transcription_date=r.transcription_date,
             transcription_time=r.transcription_time,
             emotion=r.emotion,
@@ -101,9 +101,9 @@ async def get_transcriptions_by_user(
     # Extraer solo los campos necesarios (ID, fecha, hora)
     summaries = [
         TranscriptionSummary(
-            transcription_id=t.id,
+            transcription_id=t.transcription_id,
             transcription_date=t.transcription_date,
-            transcription_time=t.transcription_date.time()
+            transcription_time=t.transcription_time
         )
         for t in results
     ]
@@ -133,7 +133,7 @@ async def get_latest_transcription_by_user(
 
     # Construir el objeto con solo los campos deseados
     return TranscriptionSummary2(
-        transcription_id=result.id,
+        transcription_id=result.transcription_id,
         transcription_date=result.transcription_date,
         transcription_time=result.transcription_time,
         emotion=result.emotion,
