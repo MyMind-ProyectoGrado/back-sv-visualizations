@@ -63,3 +63,29 @@ class TranscriptionSummary2(BaseModel):
 
     class Config:
         from_attributes = True  # o orm_mode = True si estás con Pydantic v1
+
+class TranscriptionAverages(BaseModel):
+    emotion_probs_joy: float
+    emotion_probs_anger: float
+    emotion_probs_sadness: float
+    emotion_probs_disgust: float
+    emotion_probs_fear: float
+    emotion_probs_neutral: float
+    emotion_probs_surprise: float
+    emotion_probs_trust: float
+    emotion_probs_anticipation: float
+    sentiment_probs_positive: float
+    sentiment_probs_negative: float
+    sentiment_probs_neutral: float
+
+    class Config:
+        orm_mode = True
+    
+class TrancriptionTop3(BaseModel):
+    emotion_probs_top1: str
+    emotion_probs_top2: str
+    emotion_probs_top3: str
+    sentiment_probs_top1: str
+
+    class Config:
+        orm_mode = True
