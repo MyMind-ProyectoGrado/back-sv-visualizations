@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Request, HTTPException, Depends
 from app.routes import transcription
-from app.routes import user  # Asegúrate de que sea minúscula "user" en lugar de "User"
 import os
 from dotenv import load_dotenv
 import socket
