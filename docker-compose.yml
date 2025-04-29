@@ -1,20 +1,18 @@
-version: '3.8'
-
 services:
   backend:
+    container_name: back-sv-visualizations
     build: .
     ports:
-      - "8000:8000"
+      - "8002:8002"
     env_file:
       - .env
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8002"]
     volumes:
-      - .:/app  # Esto permite que los cambios locales se reflejen en el contenedor.
+      - .:/app  
 
     networks:
-      - shared-net  # Aquí se usa directamente el nombre de la red externa
+      - shared-net 
 
 networks:
   shared-net:
-    external: true  # Asegúrate de que la red externa ya existe
-    name: shared-net  # Nombre de la red externa que ya has creado
+    name: shared-net  
