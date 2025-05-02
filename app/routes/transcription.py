@@ -14,26 +14,9 @@ from operator import itemgetter
 router = APIRouter()
 
 
-# Dependency para extraer user_id desde el token
-async def get_current_user(request: Request):
-    auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Token faltante o inválido")
-
-    token = auth_header.split(" ")[1]
-    try:
-        payload = jwt.decode(token, options={"verify_signature": False})
-        user_id = payload.get("sub")
-        if not user_id:
-            raise HTTPException(status_code=401, detail="Estructura de token inválida")
-        return user_id
-    except jwt.PyJWTError:
-        raise HTTPException(status_code=401, detail="Formato de token inválido")
-
-
 # 🔹 Transcripciones de todos los usuarios (si eres admin, por ejemplo)
 @router.get("/transcriptions", response_model=list[TranscriptionOut])
-def read_transcriptions(db: Session = Depends(get_db)):
+async def read_transcriptions(user_id: str = Depends(get_current_user),db: Session = Depends(get_db)):
     print("🔍 Entrando al endpoint /transcriptions")
     trans = crud_transcription.get_all_transcriptions(db)
     print("✅ Transcripciones obtenidas:", trans)
@@ -41,7 +24,7 @@ def read_transcriptions(db: Session = Depends(get_db)):
 
 
 # 🔹 Promedio de transcripciones del usuario autenticado en los últimos 7 días
-@router.get("/transcriptions/user/ultimos-7-dias", response_model=TranscriptionAverages)
+@router.get("/transcriptions/user/last-7-days", response_model=TranscriptionAverages)
 async def get_last_7_days_transcriptions_average(
     user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -149,7 +132,7 @@ async def get_latest_transcription_by_user(
         sentiment_probs_neutral=result.sentiment_probs_neutral,
     )
 
-@router.get("/transcriptions/user/ultimos-7-dias/top-emotions-sentiments", response_model=TrancriptionTop3)
+@router.get("/transcriptions/user/last-week/top-emotions-sentiments", response_model=TrancriptionTop3)
 async def get_top_emotions_and_sentiments(
     user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db)
