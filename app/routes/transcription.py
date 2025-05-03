@@ -41,7 +41,7 @@ def read_transcriptions(db: Session = Depends(get_db)):
 
 
 # 🔹 Promedio de transcripciones del usuario autenticado en los últimos 7 días
-@router.get("/transcriptions/user/ultimos-7-dias", response_model=TranscriptionAverages)
+@router.get("/transcriptions/user/last-7-days", response_model=TranscriptionAverages)
 async def get_last_7_days_transcriptions_average(
     user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -149,7 +149,7 @@ async def get_latest_transcription_by_user(
         sentiment_probs_neutral=result.sentiment_probs_neutral,
     )
 
-@router.get("/transcriptions/user/ultimos-7-dias/top-emotions-sentiments", response_model=TrancriptionTop3)
+@router.get("/transcriptions/user/last-week/top-emotions-sentiments", response_model=TrancriptionTop3)
 async def get_top_emotions_and_sentiments(
     user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db)
