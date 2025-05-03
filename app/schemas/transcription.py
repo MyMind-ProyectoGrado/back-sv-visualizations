@@ -37,7 +37,7 @@ class TranscriptionSummary(BaseModel):
     transcription_time: Optional[time] = None
 
     class Config:
-        from_attributes = True  # o orm_mode = True si estás con Pydantic v1
+        from_attributes = True
 
 class TranscriptionSummary2(BaseModel):
     transcription_id: str
@@ -62,7 +62,7 @@ class TranscriptionSummary2(BaseModel):
     sentiment_probs_neutral: Optional[float] = None
 
     class Config:
-        from_attributes = True  # o orm_mode = True si estás con Pydantic v1
+        from_attributes = True
 
 class TranscriptionAverages(BaseModel):
     emotion_probs_joy: float
@@ -79,7 +79,7 @@ class TranscriptionAverages(BaseModel):
     sentiment_probs_neutral: float
 
     class Config:
-        orm_mode = True
+        from_attributes = True
     
 class TrancriptionTop3(BaseModel):
     emotion_probs_top1: str
@@ -88,4 +88,4 @@ class TrancriptionTop3(BaseModel):
     sentiment_probs_top1: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True

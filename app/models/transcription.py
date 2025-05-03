@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, DateTime, ForeignKey, Time, Float
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.core.database import Base
+from app.models.user import User
 
 class Transcription(Base):
     __tablename__ = "transcriptions"
