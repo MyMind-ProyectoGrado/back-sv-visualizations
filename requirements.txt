@@ -6,3 +6,6 @@ pydantic #si
 python-dotenv #si
 pydantic[email] #si
 PYJWT #si
+pymongo #si
+odmantic #si
+motor #si
