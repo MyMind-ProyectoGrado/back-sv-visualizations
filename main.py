@@ -20,15 +20,15 @@ async def verify_request_from_apisix(request: Request):
                 raise HTTPException(status_code=403, detail="Forbidden: Not allowed source")
     else:
         # En local, solo dejamos pasar todas las solicitudes (sin validación)
-        print("Entorno local, permitiendo todas las solicitudes")
+        
         # Comentada la parte de validación por IP en entorno local
-        # expected_container_name = "apisix"
-        # expected_ip = socket.gethostbyname(expected_container_name)
-        # client_ip = request.client.host
+         expected_container_name = "apisix"
+         expected_ip = socket.gethostbyname(expected_container_name)
+         client_ip = request.client.host
 
-        # if client_ip != expected_ip:
-        #     raise HTTPException(status_code=403, detail="Forbidden: Not allowed source")
-        pass
+         if client_ip != expected_ip:
+             raise HTTPException(status_code=403, detail="Forbidden: Not allowed source")
+        
 
 app = FastAPI(title="MyMind - Visualization Service", dependencies=[Depends(verify_request_from_apisix)])
 

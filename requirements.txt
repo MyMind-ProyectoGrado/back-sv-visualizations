@@ -1,5 +1,4 @@
 fastapi #si
-sqlalchemy #si
 pymysql #si
 uvicorn #si
 pydantic #si
