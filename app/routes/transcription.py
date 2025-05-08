@@ -185,3 +185,48 @@ async def get_top_emotions_and_sentiments(
         emotion_probs_top3=top_emotions[2][0],
         sentiment_probs_top1=top_sentiments[0][0]
     )
+
+
+#🔹 Transcripción por ID de audio del usuario autenticado
+@router.get("/transcriptions/user/audio/{audio_id}", response_model=TranscriptionSummary2)
+async def get_transcription_by_audio_id(
+    audio_id: str,
+    user_id: str = Depends(get_current_user),
+    collection=Depends(get_mongo_collection)
+):
+    print(f"🔍 Buscando transcripción con audio_id: {audio_id} para usuario: {user_id}")
+    
+    # Buscar el usuario
+    user = await collection.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    # Buscar la transcripción con el audio_id en el arreglo transcriptions
+    result = next(
+        (t for t in user.get("transcriptions", []) if str(t["_id"]) == audio_id),
+        None
+    )
+
+    if not result:
+        raise HTTPException(status_code=404, detail=f"No se encontró ninguna transcripción con el ID de audio: {audio_id}")
+
+    # Mapear los datos al esquema TranscriptionSummary2
+    return TranscriptionSummary2(
+        transcription_id=str(result["_id"]),
+        transcription_date=result["date"],
+        transcription_time=result["time"],
+        emotion=result["emotion"],
+        sentiment=result["sentiment"],
+        emotion_probs_joy=result["emotionProbabilities"]["joy"],
+        emotion_probs_anger=result["emotionProbabilities"]["anger"],
+        emotion_probs_sadness=result["emotionProbabilities"]["sadness"],
+        emotion_probs_disgust=result["emotionProbabilities"]["disgust"],
+        emotion_probs_fear=result["emotionProbabilities"]["fear"],
+        emotion_probs_neutral=result["emotionProbabilities"]["neutral"],
+        emotion_probs_surprise=result["emotionProbabilities"]["surprise"],
+        emotion_probs_trust=result["emotionProbabilities"]["trust"],
+        emotion_probs_anticipation=result["emotionProbabilities"]["anticipation"],
+        sentiment_probs_positive=result["sentimentProbabilities"]["positive"],
+        sentiment_probs_negative=result["sentimentProbabilities"]["negative"],
+        sentiment_probs_neutral=result["sentimentProbabilities"]["neutral"],
+    )
