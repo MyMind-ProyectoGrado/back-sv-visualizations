@@ -1,8 +1,8 @@
-fastapi #si
-sqlalchemy #si
-pymysql #si
-uvicorn #si
-pydantic #si
-python-dotenv #si
-pydantic[email] #si
-PYJWT #si
+fastapi
+uvicorn
+pydantic
+python-dotenv
+pydantic[email]
+pyjwt
+motor  # Paquete necesario para interactuar con MongoDB en FastAPI
+pymongo  # Cliente de MongoDB para operaciones sincrónicas

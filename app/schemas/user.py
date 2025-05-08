@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 from typing import Optional
 
@@ -17,8 +17,9 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     pass
 
+
 class UserOut(UserBase):
-    user_id: str
+    user_id: str = Field(alias="_id")  # Alias para MongoDB
 
     class Config:
-        from_attributes = True
+        populate_by_name = True  # para que use el alias

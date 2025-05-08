@@ -1,22 +1,14 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-import os
+from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")  # Ej: postgresql://user:pass@localhost/dbname
+MONGO_URL = os.getenv("DATABASE_URL")
 
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+client = AsyncIOMotorClient(MONGO_URL)
+mongo_db = client["mymind"]  # Cambia si tu DB tiene otro nombre
 
-Base = declarative_base()
-
-# Función para obtener la sesión de base de datos
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# Función equivalente a get_db()
+async def get_db():
+    return mongo_db

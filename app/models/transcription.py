@@ -1,33 +1,35 @@
-from sqlalchemy import Column, String, DateTime, ForeignKey, Time, Float
-from sqlalchemy.orm import relationship
-from datetime import datetime
-from app.core.database import Base
-from app.models.user import User
+from pydantic import BaseModel, Field
+from typing import Optional
+from datetime import datetime, time
 
-class Transcription(Base):
-    __tablename__ = "transcriptions"
+class Transcription(BaseModel):
+    transcription_id: str = Field(..., alias="_id")  # Mongo usa "_id" como clave primaria
+    transcription_date: datetime = Field(default_factory=datetime.utcnow)
+    transcription_time: Optional[time]
+    text: Optional[str]
+    emotion: Optional[str]
+    sentiment: Optional[str]
+    topic: Optional[str]
 
-    transcription_id = Column(String(255), primary_key=True, index=True)
-    transcription_date = Column(DateTime, default=datetime.utcnow)
-    transcription_time = Column(Time)
-    text = Column(String(1000))
-    emotion = Column(String(100))
-    sentiment = Column(String(100))
-    topic = Column(String(255))
-    
-    emotion_probs_joy = Column(Float)
-    emotion_probs_anger = Column(Float)
-    emotion_probs_sadness = Column(Float)
-    emotion_probs_disgust = Column(Float)
-    emotion_probs_fear = Column(Float)
-    emotion_probs_neutral = Column(Float)
-    emotion_probs_surprise = Column(Float)
-    emotion_probs_trust = Column(Float)
-    emotion_probs_anticipation = Column(Float)
-    
-    sentiment_probs_positive = Column(Float)
-    sentiment_probs_negative = Column(Float)
-    sentiment_probs_neutral = Column(Float)
+    emotion_probs_joy: Optional[float]
+    emotion_probs_anger: Optional[float]
+    emotion_probs_sadness: Optional[float]
+    emotion_probs_disgust: Optional[float]
+    emotion_probs_fear: Optional[float]
+    emotion_probs_neutral: Optional[float]
+    emotion_probs_surprise: Optional[float]
+    emotion_probs_trust: Optional[float]
+    emotion_probs_anticipation: Optional[float]
 
-    user_id = Column(String(255), ForeignKey("users.user_id"))
-    owner = relationship("User", back_populates="transcriptions")
+    sentiment_probs_positive: Optional[float]
+    sentiment_probs_negative: Optional[float]
+    sentiment_probs_neutral: Optional[float]
+
+    user_id: str  # Aquí solo guardas el ID del usuario, no hay relaciones
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {
+            datetime: lambda dt: dt.isoformat(),
+        }

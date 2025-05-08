@@ -1,9 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime, time
 from typing import Optional
 
+
 class TranscriptionOut(BaseModel):
-    transcription_id: str
+    transcription_id: str = Field(alias="_id")  # <-- importante si usas _id en Mongo
     transcription_date: datetime
     transcription_time: Optional[time] = None
     text: Optional[str] = None
@@ -11,7 +12,6 @@ class TranscriptionOut(BaseModel):
     sentiment: Optional[str] = None
     topic: Optional[str] = None
 
-    # Nuevos campos agregados
     emotion_probs_joy: Optional[float] = None
     emotion_probs_anger: Optional[float] = None
     emotion_probs_sadness: Optional[float] = None
@@ -29,18 +29,19 @@ class TranscriptionOut(BaseModel):
     user_id: str
 
     class Config:
-        from_attributes = True
+        populate_by_name = True  # permite usar .dict(by_alias=True)
 
 class TranscriptionSummary(BaseModel):
-    transcription_id: str
+    transcription_id: str = Field(alias="_id")  # Alias para MongoDB
     transcription_date: datetime
     transcription_time: Optional[time] = None
 
     class Config:
-        from_attributes = True
+        populate_by_name = True  # para que use el alias
+
 
 class TranscriptionSummary2(BaseModel):
-    transcription_id: str
+    transcription_id: str = Field(alias="_id")  # Alias para MongoDB
     transcription_date: datetime
     transcription_time: Optional[time] = None
     emotion: Optional[str] = None
@@ -62,7 +63,8 @@ class TranscriptionSummary2(BaseModel):
     sentiment_probs_neutral: Optional[float] = None
 
     class Config:
-        from_attributes = True
+        populate_by_name = True  # para que use el alias
+
 
 class TranscriptionAverages(BaseModel):
     emotion_probs_joy: float
@@ -79,8 +81,9 @@ class TranscriptionAverages(BaseModel):
     sentiment_probs_neutral: float
 
     class Config:
-        from_attributes = True
-    
+        populate_by_name = True  # para que use el alias
+
+
 class TrancriptionTop3(BaseModel):
     emotion_probs_top1: str
     emotion_probs_top2: str
@@ -88,4 +91,4 @@ class TrancriptionTop3(BaseModel):
     sentiment_probs_top1: str
 
     class Config:
-        from_attributes = True
+        populate_by_name = True  # para que use el alias

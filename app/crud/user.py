@@ -1,11 +1,13 @@
-from sqlalchemy.orm import Session
-from app.models.user import User
-from app.schemas.user import UserOut
+from typing import List, Optional
+from pymongo import ASCENDING
+from app.models.user import User  # si lo necesitas para validación
+from app.schemas.user import UserOut  # opcional, si quieres usar Pydantic
 
-# Función para obtener todos los usuarios
-def get_users(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(User).offset(skip).limit(limit).all()
+# 🔹 Obtener todos los usuarios con paginación
+async def get_users(db, skip: int = 0, limit: int = 10) -> List[dict]:
+    cursor = db.users.find().sort("user_id", ASCENDING).skip(skip).limit(limit)
+    return await cursor.to_list(length=limit)
 
-# Función para obtener un usuario por su ID
-def get_user_by_id(db: Session, user_id: str):
-    return db.query(User).filter(User.user_id == user_id).first()
+# 🔹 Obtener un usuario por ID
+async def get_user_by_id(db, user_id: str) -> Optional[dict]:
+    return await db.users.find_one({"_id": user_id})

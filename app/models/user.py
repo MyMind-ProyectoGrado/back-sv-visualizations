@@ -1,26 +1,27 @@
-from sqlalchemy import Column, String, DateTime, Boolean
-from sqlalchemy.orm import relationship
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional
 from datetime import datetime
-from app.core.database import Base
 
-class User(Base):
-    __tablename__ = "users"
+class User(BaseModel):
+    user_id: str = Field(..., alias="_id")  # MongoDB usa _id como clave primaria
+    name: Optional[str]
+    email: Optional[EmailStr]
+    profile_pic: Optional[str]
+    birthdate: Optional[datetime]
+    city: Optional[str]
+    personality: Optional[str]
+    university: Optional[str]
+    degree: Optional[str]
+    gender: Optional[str]
+    notifications: bool = True
+    accept_policies: bool = False
+    acceptance_date: datetime = Field(default_factory=datetime.utcnow)
+    acceptance_ip: Optional[str]
+    allow_anonimized_usage: bool = False
 
-    user_id = Column(String(255), primary_key=True, index=True)
-    name = Column(String(100))
-    email = Column(String(100), unique=True)
-    profile_pic = Column(String(200))
-    birthdate = Column(DateTime)
-    city = Column(String(100))
-    personality = Column(String(100))
-    university = Column(String(255))
-    degree = Column(String(255))
-    gender = Column(String(50))
-    notifications = Column(Boolean, default=True)
-    accept_policies = Column(Boolean, default=False)
-    acceptance_date = Column(DateTime, default=datetime.utcnow)
-    acceptance_ip = Column(String(45))
-    allow_anonimized_usage = Column(Boolean, default=False)
-
-
-    transcriptions = relationship("Transcription", back_populates="owner")
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {
+            datetime: lambda dt: dt.isoformat(),
+        }

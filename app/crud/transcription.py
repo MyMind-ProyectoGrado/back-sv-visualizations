@@ -1,44 +1,33 @@
-from sqlalchemy.orm import Session
-from sqlalchemy import desc
 from datetime import datetime, timedelta, timezone
+from typing import List, Optional
+from pymongo import DESCENDING, ASCENDING
 from app.models.transcription import Transcription
 
+# 🔹 Obtener todas las transcripciones
+async def get_all_transcriptions(db) -> List[dict]:
+    return await db.transcriptions.find().to_list(length=None)
 
-def get_all_transcriptions(db: Session):
-    return db.query(Transcription).all()
+# 🔹 Obtener transcripción por ID
+async def get_transcription_by_id(db, transcription_id: str) -> Optional[dict]:
+    return await db.transcriptions.find_one({"_id": transcription_id})
 
-
-def get_transcription_by_id(db: Session, transcription_id: str):
-    return db.query(Transcription).filter(Transcription.transcription_id == transcription_id).first()
-
-
-def get_transcriptions_last_7_days(db: Session):
+# 🔹 Obtener transcripciones de los últimos 7 días (excluyendo hoy)
+async def get_transcriptions_last_7_days(db) -> List[dict]:
     today = datetime.now(timezone.utc).date()
     seven_days_ago = today - timedelta(days=7)
     yesterday = today - timedelta(days=1)
 
-    return (
-        db.query(Transcription)
-        .filter(Transcription.transcription_date >= seven_days_ago)
-        .filter(Transcription.transcription_date <= yesterday)
-        .order_by(Transcription.transcription_date.asc())
-        .all()
-    )
+    return await db.transcriptions.find({
+        "transcription_date": {
+            "$gte": datetime.combine(seven_days_ago, datetime.min.time()),
+            "$lte": datetime.combine(yesterday, datetime.max.time())
+        }
+    }).sort("transcription_date", ASCENDING).to_list(length=None)
 
+# 🔹 Obtener todas las transcripciones de un usuario
+async def get_transcriptions_by_user(db, user_id: str) -> List[dict]:
+    return await db.transcriptions.find({"user_id": user_id}).sort("transcription_date", DESCENDING).to_list(length=None)
 
-def get_transcriptions_by_user(db: Session, user_id: str):
-    return (
-        db.query(Transcription)
-        .filter(Transcription.user_id == user_id)
-        .order_by(Transcription.transcription_date.desc())
-        .all()
-    )
-
-
-def get_latest_transcription_by_user(db: Session, user_id: str):
-    return (
-        db.query(Transcription)
-        .filter(Transcription.user_id == user_id)
-        .order_by(Transcription.transcription_date.desc())
-        .first()
-    )
+# 🔹 Obtener la transcripción más reciente de un usuario
+async def get_latest_transcription_by_user(db, user_id: str) -> Optional[dict]:
+    return await db.transcriptions.find_one({"user_id": user_id}, sort=[("transcription_date", DESCENDING)])
