@@ -1,10 +1,15 @@
 fastapi #si
-pymysql #si
 uvicorn #si
 pydantic #si
 python-dotenv #si
-pydantic[email] #si
-PYJWT #si
+pydantic #si
+pyjwt #si
 pymongo #si
 odmantic #si
 motor #si
+pytest #si
+httpx #si
+pytest-asyncio #si
+pytest-mock #si
+prometheus-fastapi-instrumentator
+prometheus-client
