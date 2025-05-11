@@ -1,10 +1,12 @@
-fastapi #si
-pymysql #si
-uvicorn #si
-pydantic #si
-python-dotenv #si
-pydantic[email] #si
-PYJWT #si
-pymongo #si
-odmantic #si
-motor #si
+fastapi 
+uvicorn 
+pydantic 
+python-dotenv 
+pydantic 
+pyjwt 
+pymongo 
+odmantic 
+motor 
+httpx 
+prometheus-fastapi-instrumentator
+prometheus-client
