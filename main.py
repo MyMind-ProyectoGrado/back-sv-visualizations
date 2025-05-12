@@ -91,7 +91,7 @@ db = client.get_database("mymind_users")  # Nombre de la BD
 # Importar y registrar las rutas
 from app.routes import transcription
 
-app.include_router(transcription.router, prefix="/transcriptions", tags=["Transcriptions"])
+app.include_router(transcription.router, tags=["Transcriptions"])
 
 # Ruta de prueba
 @app.get("/")
